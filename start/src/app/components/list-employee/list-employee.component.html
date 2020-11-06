@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12 pt-5">
+            <div class="bg-content align-self-center p-4">
+                <h2 class="text-center text-uppercase py-3"><span class="text-danger">{{departments.initials}}:</span> {{departments.name}}</h2>
+                <h3 class="text-uppercase py-3 ">Funcionários <span class="badge badge-danger"><i class="fa fa-plus"></i></span></h3>
+
+                <div class="table-responsive">
+                    <table class="table table-data text-center w-100">
+                        <thead>
+                            <tr class="bg-dark text-uppercase text-white">
+                                <th scope="col"></th>
+                                <th scope="col">Nome</th>
+                                <th scope="col">RG</th>
+                                <th scope="col">Data/hora de criação</th>
+                                <th scope="col">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of departments.employees">
+                                <td>{{item.picture}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.rg}}</td>
+                                <td>{{item.created}}</td>
+                                <td>
+                                    <i class="fa fa-edit fa-2x hover-danger text-dark mx-4"></i>
+                                    <i class="fa fa-trash fa-2x hover-danger text-dark mx-4"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

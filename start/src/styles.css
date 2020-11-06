@@ -1,1 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "../node_modules/font-awesome/css/font-awesome.css";
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.h-100vh {
+    height: 100vh;
+}
+
+.hover-danger:hover {
+    color: #dc3545 !important;
+}
+
+.bg-content {
+    background-color: #dcdcdc;
+    border-radius: 10px;
+}
+
+.table-data tr:hover {
+    background-color: #fff;
+}
