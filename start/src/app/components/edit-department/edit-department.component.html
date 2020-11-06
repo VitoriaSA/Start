@@ -1,0 +1,21 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12 pt-5">
+            <div class="bg-content align-self-center p-4">
+                <h3 class="text-uppercase py-3">Editar Departamento</h3>
+
+                <form [formGroup]="departmentForm">
+                    <div class="form-group">
+                        <label>Nome:</label>
+                        <input type="text" class="form-control" id="name" placeholder="Digite..." formControlName="name" [value]="departments.name" />
+                    </div>
+                    <div class="form-group">
+                        <label>Iniciais:</label>
+                        <input type="text" class="form-control" id="initials" placeholder="Digite..." formControlName="initials" />
+                    </div>
+                    <button type="submit" class="btn btn-danger mt-2" (click)="edit()">Salvar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

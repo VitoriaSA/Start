@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-12 pt-5">
             <div class="bg-content align-self-center p-4">
-                <h3 class="text-uppercase py-3">Departamentos <span class="badge badge-danger"><i class="fa fa-plus"></i></span></h3>
+                <h3 class="text-uppercase py-3">Departamentos <span class="badge badge-danger" [routerLink]="['/newdepartment']"><i class="fa fa-plus"></i></span></h3>
 
                 <div class="table-responsive">
                     <table class="table table-data text-center w-100">
@@ -10,18 +10,22 @@
                             <tr class="bg-dark text-uppercase text-white">
                                 <th scope="col">Nome</th>
                                 <th scope="col">Iniciais</th>
+                                <th scope="col">Ultima atualização</th>
                                 <th scope="col">Data/hora de criação</th>
+                                <th scope="col">Ativo</th>
                                 <th scope="col">Ação</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let item of departments" [routerLink]="['/listemployee']" [state]="{ data: item.id}">
-                                <td>{{item.name}}</td>
-                                <td>{{item.initials}}</td>
-                                <td>{{item.created}}</td>
-                                <td>
-                                    <i class="fa fa-edit fa-2x hover-danger text-dark mx-4"></i>
-                                    <i class="fa fa-trash fa-2x hover-danger text-dark mx-4"></i>
+                                <td *ngIf="item.active === true">{{item.name}}</td>
+                                <td *ngIf="item.active === true">{{item.initials}}</td>
+                                <td *ngIf="item.active === true">{{item.lastUpdated}}</td>
+                                <td *ngIf="item.active === true">{{item.created}}</td>
+                                <td *ngIf="item.active === true">{{item.active}}</td>
+                                <td *ngIf="item.active === true">
+                                    <i class="fa fa-edit fa-2x hover-danger text-dark mx-4" [routerLink]="['/editdepartment']" [state]="{ data: item.id}"></i>
+                                    <i class="fa fa-trash fa-2x hover-danger text-dark mx-4" [routerLink]="['']" (click)="openDeleteModal($event, item.id)"></i>
                                 </td>
                             </tr>
                         </tbody>

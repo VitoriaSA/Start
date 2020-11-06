@@ -1,7 +1,8 @@
-import { Input } from '@angular/core';
+import { DeleteEmployeeComponent } from './../delete-employee/delete-employee.component';
 import { Component, OnInit } from '@angular/core';
 import { Departments } from 'src/app/models/depatments.model';
 import { CrudService } from 'src/app/services/crud.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-list-employee',
@@ -15,7 +16,8 @@ export class ListEmployeeComponent implements OnInit {
   departmentIdLocal: string;
   erro: any;
 
-  constructor(private crudService: CrudService) {
+  constructor(private crudService: CrudService, private modalService: NgbModal) {
+
     if (history.state.data !== undefined){
       this.departmentId = history.state.data;
       localStorage.setItem('departmentId', this.departmentId);
@@ -28,14 +30,19 @@ export class ListEmployeeComponent implements OnInit {
 
   getter(){
     this.departmentIdLocal = localStorage.getItem('departmentId');
-    console.log(this.departmentIdLocal);
     this.crudService.getDepartmentById(this.departmentIdLocal).subscribe((data: Departments) => {
       this.departments = data;
-      console.log('Employee', this.departments.employees);
     }, (error: any) => {
       this.erro = error;
       console.log('Error: ', error);
     });
+  }
+
+  openDeleteModal($event: MouseEvent, id: number, departmentId: number){
+    $event.stopPropagation();
+    const activeModal = this.modalService.open(DeleteEmployeeComponent);
+    activeModal.componentInstance.id = id;
+    activeModal.componentInstance.departmentId = departmentId;
   }
 
 }
