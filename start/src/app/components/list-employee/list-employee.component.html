@@ -14,18 +14,16 @@
                                 <th scope="col">RG</th>
                                 <th scope="col">Ultima atualização</th>
                                 <th scope="col">Data/hora de criação</th>
-                                <th scope="col">Ativo</th>
                                 <th scope="col">Ação</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let item of departments.employees">
-                                <td *ngIf="item.active === true">{{item.picture}}</td>
+                                <td *ngIf="item.active === true"><img [src]="'http://localhost:49757/' + item.picture" class="employee-img rounded-circle" /></td>
                                 <td *ngIf="item.active === true">{{item.name}}</td>
                                 <td *ngIf="item.active === true">{{item.rg}}</td>
                                 <td *ngIf="item.active === true">{{item.lastUpdated}}</td>
                                 <td *ngIf="item.active === true">{{item.created}}</td>
-                                <td *ngIf="item.active === true">{{item.active}}</td>
                                 <td *ngIf="item.active === true">
                                     <i class="fa fa-edit fa-2x hover-danger text-dark mx-4" [routerLink]="['/editemployee']" [state]="{ data: departments.id, employee: item.id }"></i>
                                     <i class="fa fa-trash fa-2x hover-danger text-dark mx-4" [routerLink]="['/listemployee']" (click)="openDeleteModal($event, item.id, departments.id)"></i>

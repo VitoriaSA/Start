@@ -1,6 +1,6 @@
 import { Employees } from './../../models/employees.model';
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Departments } from 'src/app/models/depatments.model';
@@ -49,6 +49,17 @@ export class CreateEmployeeComponent implements OnInit {
     });
   }
 
+  onFileChange(event) {
+    const file = <FileList> event.target.files;
+    document.getElementById('customFileLabel').innerHTML = file[0].name;
+
+    if (event.target.files.length > 0) {
+      this.employeeForm.patchValue({
+        picture: file[0]
+      });
+    }
+  }
+
   create(){
 
     if (this.employeeForm.value.name && this.employeeForm.value.rg && this.employeeForm.value.picture){
@@ -62,23 +73,37 @@ export class CreateEmployeeComponent implements OnInit {
       this.employee.created = this.created;
       this.employee.lastUpdated = this.created;
 
-      this.department = this.departments;
-      this.department.employees.push(this.employee);
+      const formData = new FormData();
+      formData.append('files', this.employeeForm.value.picture, this.employeeForm.value.picture.name);
 
-      this.crudService.putDepartment(this.department.id, this.department).toPromise()
-      .then(data => {
-        if (data.id){
-          alert('Funcionário criado.');
-          this.router.navigate(['listemployee']);
-        }
-        console.log('O data que recebemos', data);
+
+      this.crudService.postFile(formData).toPromise()
+      .then(path => {
+        this.employee.picture = path;
+
+        this.department = this.departments;
+        this.department.employees.push(this.employee);
+
+        this.crudService.putDepartment(this.department.id, this.department).toPromise()
+        .then(data => {
+          if (data.id){
+            alert('Funcionário criado.');
+            this.router.navigate(['listemployee']);
+          }
+        }).catch(error => {
+          this.erro = error;
+          console.log('Error: ', error);
+          alert('Erro ao inserir funcionário, tente novamente mais tarde.');
+        });
+
       }).catch(error => {
         this.erro = error;
         console.log('Error: ', error);
-        alert("Erro ao inserir funcionário, tente novamente mais tarde.");
+        alert('Erro ao inserir funcionário, tente novamente mais tarde.');
       });
+
     }else{
-      alert("Preencha todos os campos corretamente!");
+      alert('Preencha todos os campos corretamente!');
     }
   }
 

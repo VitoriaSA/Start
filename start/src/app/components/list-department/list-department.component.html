@@ -12,7 +12,6 @@
                                 <th scope="col">Iniciais</th>
                                 <th scope="col">Ultima atualização</th>
                                 <th scope="col">Data/hora de criação</th>
-                                <th scope="col">Ativo</th>
                                 <th scope="col">Ação</th>
                             </tr>
                         </thead>
@@ -22,7 +21,6 @@
                                 <td *ngIf="item.active === true">{{item.initials}}</td>
                                 <td *ngIf="item.active === true">{{item.lastUpdated}}</td>
                                 <td *ngIf="item.active === true">{{item.created}}</td>
-                                <td *ngIf="item.active === true">{{item.active}}</td>
                                 <td *ngIf="item.active === true">
                                     <i class="fa fa-edit fa-2x hover-danger text-dark mx-4" [routerLink]="['/editdepartment']" [state]="{ data: item.id}"></i>
                                     <i class="fa fa-trash fa-2x hover-danger text-dark mx-4" [routerLink]="['']" (click)="openDeleteModal($event, item.id)"></i>

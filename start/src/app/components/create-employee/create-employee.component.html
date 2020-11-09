@@ -6,8 +6,14 @@
 
                 <form [formGroup]="employeeForm">
                     <div class="form-group">
-                        <label>Foto:</label>
-                        <input type="text" class="form-control" id="picture" placeholder="Digite..." formControlName="picture" />
+                        <label for="file">Foto: </label>
+                        <br />
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFile" aria-describedby="inputGroupFileAddon04" (change)="onFileChange($event)" formControlName="picture" />
+                                <label class="custom-file-label" for="customFileLabel" id="customFileLabel">Selecionar arquivo</label>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Nome:</label>

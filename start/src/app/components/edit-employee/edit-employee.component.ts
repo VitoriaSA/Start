@@ -1,7 +1,9 @@
+import { ImageService } from './../../services/image.service';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Observable, Observer } from 'rxjs';
 import { Departments } from 'src/app/models/depatments.model';
 import { Employees } from 'src/app/models/employees.model';
 import { CrudService } from 'src/app/services/crud.service';
@@ -14,6 +16,8 @@ import { CrudService } from 'src/app/services/crud.service';
 })
 export class EditEmployeeComponent implements OnInit {
 
+  generatedImage: any;
+  pictureUrl: string;
   employee: Employees;
   departments: Departments;
   departmentId: string;
@@ -28,8 +32,9 @@ export class EditEmployeeComponent implements OnInit {
     rg: new FormControl('')
   });
   erro: any;
+  error: any;
 
-  constructor(private crudService: CrudService, private datePipe: DatePipe, private router: Router) {
+  constructor(private crudService: CrudService, private imageService: ImageService , private datePipe: DatePipe, private router: Router) {
     if (history.state.data !== undefined){
       this.departmentId = history.state.data;
       localStorage.setItem('departmentId', this.departmentId);
@@ -57,17 +62,32 @@ export class EditEmployeeComponent implements OnInit {
         }
       }
 
+      //this.pictureUrl = 'http://localhost:49757' + this.employee.picture;
+      //this.generatedImage = this.imageService.getImage(this.pictureUrl);
+
       this.employeeForm.patchValue({
-        picture: this.employee.picture,
+        picture: null,
         name: this.employee.name,
         rg: this.employee.rg
-      });
 
-      console.log('Employee', this.departments);
+      });
+      console.log(this.generatedImage);
+
     }, (error: any) => {
       this.erro = error;
       console.log('Error: ', error);
     });
+  }
+
+  onFileChange(event) {
+    const file = <FileList> event.target.files;
+    document.getElementById('customFileLabel').innerHTML = file[0].name;
+
+    if (event.target.files.length > 0) {
+      this.employeeForm.value.picture = file[0];
+    }
+
+    console.log(this.employeeForm.value.picture);
   }
 
   edit(){
@@ -83,27 +103,43 @@ export class EditEmployeeComponent implements OnInit {
       this.created = this.datePipe.transform(this.created, 'yyyy-MM-ddThh:mm:ss');
       this.employee.lastUpdated = this.created;
 
-      this.department = this.departments;
+      console.log(this.employeeForm.value.picture);
 
-      for (let key in this.department.employees){
-        if (this.department.employees[key].id == this.employeeIdLocal){
-          this.department.employees[key] = this.employee;
-        }
-      }
+      const formData = new FormData();
+      formData.append('files', this.employeeForm.value.picture, this.employeeForm.value.picture.name);
 
-      this.crudService.putDepartment(this.department.id, this.department).toPromise()
-      .then(data => {
-        if (data.id){
-          alert('Funcionário alterado.');
-          this.router.navigate(['listemployee']);
+      this.crudService.postFile(formData).toPromise()
+      .then(path => {
+        this.employee.picture = path;
+
+        this.department = this.departments;
+
+        for (let key in this.department.employees){
+          if (this.department.employees[key].id == this.employeeIdLocal){
+            this.department.employees[key] = this.employee;
+          }
         }
+
+        this.crudService.putDepartment(this.department.id, this.department).toPromise()
+        .then(data => {
+          if (data.id){
+            alert('Funcionário alterado.');
+            this.router.navigate(['listemployee']);
+        }
+        }).catch(error => {
+          this.erro = error;
+          console.log('Error: ', error);
+          alert('Erro ao alterar funcionário, tente novamente mais tarde.');
+        });
+
       }).catch(error => {
         this.erro = error;
         console.log('Error: ', error);
-        alert("Erro ao alterar funcionário, tente novamente mais tarde.");
+        alert('Erro ao inserir funcionário, tente novamente mais tarde.');
       });
+
     }else{
-      alert("Preencha todos os campos corretamente!");
+      alert('Preencha todos os campos corretamente!');
     }
   }
 }
